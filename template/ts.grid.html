@@ -1,0 +1,7 @@
+<div class="ts-toast ts-toast-{{toast.horizontalAlign}} ts-toast-{{toast.verticalAlign}} {{toast.animation ? 'ts-toast-animate-' + toast.animation : ''}}">
+    <ul class="ts-toast-list" >
+        <li ng-repeat="message in toast.messageList | limitTo:toast.messageLimit">
+            <ts-toast-message  message="message"></ts-toast-message>
+        </li>
+    </ul>
+</div>
