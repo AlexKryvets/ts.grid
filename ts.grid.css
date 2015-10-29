@@ -1,0 +1,232 @@
+tbody {
+    display: block;
+    width: 100%;
+}
+tbody {
+    overflow-y: auto;
+}
+
+table.ts-table {
+    border: 0;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border: 1px solid #f5f5f5;
+}
+
+.ts-table th {
+    position: relative;
+    border-bottom: 1px solid #cecece;
+}
+
+.ts-table th:not(:last-child) {
+    border-right: 1px solid #cecece;
+}
+
+.ts-table th .col-resizer {
+    right: 0;
+    top: 0;
+    height: 20px;
+    width: 5px;
+    position: absolute;
+    cursor: col-resize;
+}
+
+.ts-table td, .ts-table th {
+    text-align: left
+}
+
+.ts-table th:not(:first-child) {
+    white-space: nowrap
+}
+
+.ts-table td:not(:first-child), .ts-table th:not(:first-child) {
+    padding-left: 24px
+}
+
+.p6n-table td .p6n-button {
+    margin: -3px 0
+}
+
+.p6n-table td {
+    color: #8d8d8d;
+    padding: 3px 0 4px 0;
+    vertical-align: top
+}
+
+.p6n-table td:first-child {
+    padding-left: 8px
+}
+
+.p6n-table td:last-child {
+    padding-right: 8px
+}
+
+.p6n-table {
+    margin: -4px 0 20px;
+    margin-bottom: 20px;
+    max-width: 100%;
+    width: 100%
+}
+
+
+.p6n-table th:first-child {
+    padding-left: 8px
+}
+
+.p6n-table th:last-child {
+    padding-right: 8px
+}
+
+.p6n-table.p6n-case-sensitive-column-headers th {
+    text-transform: none
+}
+
+
+
+.p6n-table th a.p6n-sort-link:before {
+    border-bottom: 1.1px solid rgba(0, 0, 0, 0);
+    border-right: 1.1px solid rgba(0, 0, 0, 0);
+    content: "";
+    display: block;
+    height: 5px;
+    position: absolute;
+    right: 0;
+    width: 5px;
+    transition: all ease .2s;
+    -webkit-transform: rotateZ(45deg);
+    transform: rotateZ(45deg)
+}
+
+.p6n-table th a.p6n-sort-link {
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: .02em;
+    line-height: 12px;
+    color: #222;
+    text-transform: inherit;
+    display: inline-block;
+    margin: 0;
+    position: relative;
+    padding-right: 12px;
+    text-decoration: none !important
+}
+
+.p6n-table th a.p6n-sort-link.sort-header:before {
+    border-bottom-color: #4184f3;
+    border-right-color: #4184f3
+}
+
+.p6n-table th a.p6n-sort-link.sort-header {
+    color: #4184f3
+}
+
+.p6n-table th.p6n-align-right a.p6n-sort-link {
+    padding-left: 12px;
+    padding-right: 0
+}
+
+.p6n-table th.p6n-align-right a.p6n-sort-link:before {
+    left: 0
+}
+
+.p6n-table th a.p6n-sort-flip:before {
+    -webkit-transform: rotateZ(-135deg);
+    transform: rotateZ(-135deg)
+}
+
+.p6n-table th .p6n-th-note {
+    font-size: 12px;
+    line-height: 16px;
+    bottom: auto;
+    color: #8d8d8d;
+    font-weight: 400;
+    margin: 0;
+    text-transform: none
+}
+
+.p6n-col-checkbox {
+    width: 12px;
+    -webkit-user-select: none
+}
+
+.p6n-table .p6n-col-checkbox {
+    width: 12px;
+    padding-bottom: 0;
+    padding-top: 2px
+}
+
+.p6n-table .p6n-col-checkbox + th, .p6n-table .p6n-col-checkbox + td {
+    padding-left: 12px
+}
+
+.p6n-col-checkbox .p6n-checkbox, .p6n-col-checkbox .p6n-radio {
+    margin: 0;
+    bottom: auto;
+    top: 2px
+}
+
+.p6n-col-minwidth {
+    white-space: nowrap;
+    width: 1px
+}
+
+.p6n-table th a.p6n-sort-link:before {
+    top: 1.1px
+}
+
+.p6n-table th a.p6n-sort-flip:before {
+    top: 4px
+}
+
+.p6n-table th a.p6n-sort-link:hover:before {
+    border-bottom-color: #bbb;
+    border-right-color: #bbb
+}
+
+.p6n-table th a.p6n-sort-link:hover {
+    color: #4184f3
+}
+
+.p6n-table th a.p6n-sort-link.sort-header:hover:before {
+    border-bottom-color: #4184f3;
+    border-right-color: #4184f3
+}
+
+.p6n-table th a.p6n-sort-link.sort-header:hover {
+    color: #4184f3
+}
+
+.p6n-table a {
+    font-weight: 500;
+    color: #424242;
+    text-decoration: none
+}
+
+.p6n-table a.p6n-fixed-font {
+    font-weight: 700
+}
+
+.p6n-table a:hover {
+    color: #4184f3;
+    text-decoration: underline
+}
+
+.p6n-table tbody tr:nth-child(odd) {
+    background-color: #fafafa
+}
+
+.p6n-table.p6n-table-rowgroup-2 tbody tr {
+    background-color: transparent
+}
+
+.p6n-table.p6n-table-rowgroup-2 tbody tr:nth-child(4n+1), .p6n-table.p6n-table-rowgroup-2 tbody tr:nth-child(4n+2) {
+    background-color: #fafafa
+}
+
+.p6n-table td.p6n-column-with-hint {
+    padding-right: 19px
+}
+
+.p6n-table td:last-child.p6n-column-with-hint {
+    padding-right: 27px
+}

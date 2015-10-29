@@ -4,11 +4,60 @@
     <meta charset="UTF-8">
     <title>Grid</title>
     <link rel="stylesheet" href="ts.grid.css">
+    <script type="text/javascript" src="bower_components/jquery/dist/jquery.js"></script>
     <script type="text/javascript" src="bower_components/angular/angular.js"></script>
     <script type="text/javascript" src="ts.grid.js"></script>
     <script type="text/javascript" src="app.js"></script>
 </head>
 <body ng-controller="AppController">
 <ts-grid></ts-grid>
+
+<table ts-table="" default-sort-key="-createTime" show-checkboxes="ctrl.projectRole.canEdit" selected-items="ctrl.selectedCredentials.apiKeys" class="p6n-table ts-table">
+    <thead pan-sort-agent="sortCtrl" default-sort-key="-createTime">
+    <tr><!-- ngIf: panTableCtrl.showCheckboxes --><th ng-if="panTableCtrl.showCheckboxes" class="p6n-col-checkbox">  <label ng-transclude="" pan-form-option-type="checkbox" class="p6n-checkbox">    <input type="checkbox" pan-tri-state-checkbox="" id="headerCheckbox" ng-model="panTableCtrl.allItemsSelected" ng-change="panTableCtrl.onHeaderCheckboxChanged()" class="ng-valid ng-dirty ng-valid-parse ng-touched">     <span class="p6n-form-label" ng-transclude="">  </span></label></th><!-- end ngIf: panTableCtrl.showCheckboxes -->
+        <th pan-table-header="Name" sort-key="displayName">
+            <a href="javascript:;" sort-key="displayName" class="p6n-clickable-link p6n-sort-link p6n-sort-flip">
+                <span pan-sort-key="displayName">Name</span>
+            </a>
+            <div class="col-resizer"></div>
+        </th>
+        <th pan-table-header="Creation date" class="p6n-api-credential-table-date" sort-key="createTime">
+            <a href="javascript:;" sort-key="createTime" class="p6n-clickable-link p6n-sort-link sort-header p6n-sort-flip">
+                <span pan-sort-key="createTime">Creation date</span>
+            </a>
+            <div class="col-resizer"></div>
+        </th>
+        <th pan-table-header="Type" class="p6n-api-credential-table-type" sort-key="ctrl.getApiKeyDisplayType">
+            <a href="javascript:;" sort-key="ctrl.getApiKeyDisplayType" class="p6n-clickable-link p6n-sort-link p6n-sort-flip">
+                <span pan-sort-key="ctrl.getApiKeyDisplayType">Type</span>
+            </a>
+            <div class="col-resizer"></div>
+        </th>
+        <th pan-table-header="Key" sort-key="currentKey" class="p6n-col6">
+            <a href="javascript:;" sort-key="currentKey" class="p6n-clickable-link p6n-sort-link p6n-sort-flip">
+                <span pan-sort-key="currentKey">Key</span>
+            </a>
+            <div class="col-resizer"></div>
+        </th>
+        <!-- ngIf: ctrl.projectRole.canEdit --><th ng-if="ctrl.projectRole.canEdit" class="p6n-api-credential-table-actions"></th><!-- end ngIf: ctrl.projectRole.canEdit -->
+    </tr>
+    </thead>
+    <tbody>
+    <tr pan-table-row="" pan-table-row-after-repeat="key" class="" ng-repeat="n in [1,2,3,4,5,6,7,8,9,10, 11,12,123]"><!-- ngIf: panTableCtrl.showCheckboxes --><td ng-if="panTableCtrl.showCheckboxes" class="p6n-col-checkbox">  <label ng-transclude="" pan-form-option-type="checkbox" class="p6n-checkbox">    <input type="checkbox" ng-model="panTableRowCtrl.selected" ng-change="panTableRowCtrl.onCheckboxViewChanged()" class="ng-pristine ng-untouched ng-valid">    <span class="p6n-form-label" ng-transclude="">  </span></label></td><!-- end ngIf: panTableCtrl.showCheckboxes -->
+        <td>
+            <!-- ngIf: ::ctrl.showApiKeyWarning(key) -->
+            <a ng-href="/project/ultimate-triode-104218/apiui/credential/key/0?authuser=1" href="/project/ultimate-triode-104218/apiui/credential/key/0?authuser=1">Server key 1</a>
+        </td>
+        <td class="p6n-api-credential-table-date">Aug 19, 2015</td>
+        <td class="p6n-api-credential-table-type">Server</td>
+        <td class="p6n-col6">AIzaSyAjKnHxoYjx_AzsR4yGw-1sPoPP2boJBRY</td>
+        <!-- ngIf: ctrl.projectRole.canEdit --><td class="p6n-api-credential-table-actions" ng-if="ctrl.projectRole.canEdit">
+            <jfk-button class="p6n-width-xs p6n-api-credential-delete jfk-button goog-inline-block jfk-button-flat" jfk-button-style="FLAT" jfk-on-action="ctrl.promptDeleteCredentials({apiKeys: [key]})" title="Delete API key" role="button" tabindex="0" style="-webkit-user-select: none;">
+                <div class="p6n-icon p6n-icon-action p6n-icon-action-delete" role="img" aria-label="Delete" action="delete">  <svg ng-switch="action" viewBox="0 0 14 14">    <!-- ngSwitchWhen: add -->    <!-- ngSwitchWhen: alert -->    <!-- ngSwitchWhen: back -->    <!-- ngSwitchWhen: branch -->    <!-- ngSwitchWhen: browserOpen -->    <!-- ngSwitchWhen: bucket -->    <!-- ngSwitchWhen: bucket-add -->    <!-- ngSwitchWhen: bucket-error -->    <!-- ngSwitchWhen: bucket-error -->    <!-- ngSwitchWhen: bucket-valid -->    <!-- ngSwitchWhen: bucket-valid -->    <!-- ngSwitchWhen: cancel -->    <!-- ngSwitchWhen: check -->    <!-- ngSwitchWhen: close -->    <!-- ngSwitchWhen: close-small -->    <!-- ngSwitchWhen: columns -->    <!-- ngSwitchWhen: debug -->    <!-- ngSwitchWhen: delete --><path ng-switch-when="delete" d="M4.5,2 L2,2 L2,4 L12,4 L12,2 L9.5,2         C9.5,1.44386482 9.05237094,1 8.50019251,1 L5.49980749,1         C4.94371665,1 4.5,1.44771525 4.5,2 Z         M3,5 L11,5 L11,11.0018986         C11,12.1054196 10.1132936,13 9.00189865,13 L4.99810135,13         C3.89458045,13 3,12.1132936 3,11.0018986 L3,5 Z" class=""></path><!-- end ngSwitchWhen: -->    <!-- ngSwitchWhen: diff -->    <!-- ngSwitchWhen: domain -->    <!-- ngSwitchWhen: download -->    <!-- ngSwitchWhen: edit -->     <!-- ngSwitchWhen: exit-folder -->    <!-- ngSwitchWhen: file -->    <!-- ngSwitchWhen: file-error -->    <!-- ngSwitchWhen: file-error -->    <!-- ngSwitchWhen: file-valid -->    <!-- ngSwitchWhen: file-valid -->    <!-- ngSwitchWhen: filter -->    <!-- ngSwitchWhen: folder -->    <!-- ngSwitchWhen: folder-add -->    <!-- ngSwitchWhen: folder-error -->    <!-- ngSwitchWhen: folder-error -->    <!-- ngSwitchWhen: folder-valid -->   <!-- ngSwitchWhen: folder-valid -->    <!-- ngSwitchWhen: fullScreen -->    <!-- ngSwitchWhen: group -->    <!-- ngSwitchWhen: help -->    <!-- ngSwitchWhen: hide -->    <!-- ngSwitchWhen: history -->    <!-- ngSwitchWhen: home -->    <!-- ngSwitchWhen: info -->    <!-- ngSwitchWhen: keyboard -->    <!-- ngSwitchWhen: label -->    <!-- ngSwitchWhen: lock -->    <!-- ngSwitchWhen: logs -->    <!-- ngSwitchWhen: metrics -->    <!-- ngSwitchWhen: more -->    <!-- ngSwitchWhen: next -->    <!-- ngSwitchWhen: outline -->    <!-- ngSwitchWhen: pause -->    <!-- ngSwitchWhen: pin -->    <!-- ngSwitchWhen: play -->    <!-- ngSwitchWhen: previous -->    <!-- ngSwitchWhen: refresh -->    <!-- ngSwitchWhen: repo -->    <!-- ngSwitchWhen: repo-shared -->    <!-- ngSwitchWhen: right -->    <!-- ngSwitchWhen: restore -->    <!-- ngSwitchWhen: search -->    <!-- ngSwitchWhen: security -->    <!-- ngSwitchWhen: serviceAccount -->    <!-- ngSwitchWhen: settings -->    <!-- ngSwitchWhen: shrink -->    <!-- ngSwitchWhen: stop -->    <!-- ngSwitchWhen: upload -->    <!-- ngSwitchWhen: user -->    <!-- ngSwitchWhen: user-add -->    <!-- ngSwitchWhen: work -->  </svg></div>
+            </jfk-button>
+        </td><!-- end ngIf: ctrl.projectRole.canEdit -->
+    </tr>
+    </tbody>
+</table>
 </body>
 </html>
