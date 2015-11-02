@@ -5,61 +5,44 @@
     <script src="bower_components/jquery/dist/jquery.js"></script>
 </head>
 <body>
-<div id="jsGrid" class="jsgrid" style="position: relative; height: 90%; width: 100%;">
-    <div class="jsgrid-grid-header jsgrid-header-scrollbar">
-        <table class="jsgrid-table">
+<div class="ts-grid">
+    <div class="ts-grid-header">
+        <table class="ts-grid-table">
             <tbody>
-            <tr class="jsgrid-header-row">
-                <th class="jsgrid-header-sortable" style="width: 150px;">Name</th>
-                <th class="jsgrid-header-sortable" style="width: 50px;">Age</th>
-                <th class="jsgrid-header-sortable" style="width: 200px;">Address</th>
-                <th class="jsgrid-header-sortable" style="width: 100px;">Country</th>
-                <th style="width: 100px;">Is Married</th>
-            </tr>
-            <tr class="jsgrid-filter-row">
-                <td style="width: 150px;"><input type="text"></td>
-                <td style="width: 50px;"><input type="number"></td>
-                <td style="width: 200px;"><input type="text"></td>
-                <td style="width: 100px;"><select>
-                    <option value="0"></option>
-                    <option value="1">United States</option>
-                    <option value="2">Canada</option>
-                    <option value="3">United Kingdom</option>
-                    <option value="4">France</option>
-                    <option value="5">Brazil</option>
-                    <option value="6">China</option>
-                    <option value="7">Russia</option>
-                </select></td>
-                <td style="width: 100px;"><input type="checkbox" readonly=""></td>
+            <tr class="ts-grid-header-row">
+                <th>Name</th>
+                <th>Age</th>
+                <th>Address</th>
+                <th>Country</th>
             </tr>
             </tbody>
         </table>
     </div>
-    <div class="jsgrid-grid-body" style="height: 331px;">
-        <table class="jsgrid-table" style="width: 1899px;">
+    <div class="ts-grid-body">
+        <table class="ts-grid-table">
             <tbody>
-                <tr class="jsgrid-row">
-                    <td style="width: 150px;">Otto Clay</td>
-                    <td class="jsgrid-align-right" style="width: 50px;">61</td>
-                    <td style="width: 200px;">Ap #897-1459 Quam Avenue</td>
-                    <td class="jsgrid-align-center" style="width: 100px;">China</td>
-                    <td class="jsgrid-align-center" style="width: 100px;"><input type="checkbox" disabled=""></td>
+                <tr class="ts-grid-row">
+                    <td>Otto Clay</td>
+                    <td>61</td>
+                    <td>Ap #897-1459 Quam Avenue</td>
+                    <td>China</td>
                 </tr>
             </tbody>
         </table>
     </div>
-    <div class="jsgrid-pager-container" style="display: block;">
-        <div class="jsgrid-pager">Pages: <span class="jsgrid-pager-nav-button jsgrid-pager-nav-inactive-button"><a
-                href="javascript:void(0);">First</a></span> <span
-                class="jsgrid-pager-nav-button jsgrid-pager-nav-inactive-button"><a href="javascript:void(0);">Prev</a></span>
-            <span class="jsgrid-pager-page jsgrid-pager-current-page">1</span><span class="jsgrid-pager-page"><a
-                    href="javascript:void(0);">2</a></span><span class="jsgrid-pager-page"><a
-                    href="javascript:void(0);">3</a></span><span class="jsgrid-pager-page"><a
-                    href="javascript:void(0);">4</a></span><span class="jsgrid-pager-page"><a
-                    href="javascript:void(0);">5</a></span><span class="jsgrid-pager-nav-button"><a
-                    href="javascript:void(0);">...</a></span> <span class="jsgrid-pager-nav-button"><a
-                    href="javascript:void(0);">Next</a></span> <span class="jsgrid-pager-nav-button"><a
-                    href="javascript:void(0);">Last</a></span> &nbsp;&nbsp; 1 of 7
+    <div class="ts-grid-pager-container" style="display: block;">
+        <div class="ts-grid-pager">
+            Pages:
+            <span class="ts-grid-pager-nav-button ts-grid-pager-nav-inactive-button"><a href="javascript:void(0);">First</a></span>
+            <span class="ts-grid-pager-nav-button ts-grid-pager-nav-inactive-button"><a href="javascript:void(0);">Prev</a></span>
+            <span class="ts-grid-pager-page ts-grid-pager-current-page">1</span>
+            <span class="ts-grid-pager-page"><a href="javascript:void(0);">2</a></span>
+            <span class="ts-grid-pager-page"><a href="javascript:void(0);">3</a></span>
+            <span class="ts-grid-pager-page"><a href="javascript:void(0);">4</a></span>
+            <span class="ts-grid-pager-page"><a href="javascript:void(0);">5</a></span>
+            <span class="ts-grid-pager-nav-button"><a href="javascript:void(0);">...</a>
+            </span> <span class="ts-grid-pager-nav-button"><a href="javascript:void(0);">Next</a></span>
+            <span class="ts-grid-pager-nav-button"><a href="javascript:void(0);">Last</a></span> &nbsp;&nbsp; 1 of 7
         </div>
     </div>
 </div>
@@ -67,11 +50,10 @@
 <script>
 
     var refreshHeight = function () {
-        console.log($('.jsgrid').height(), $('.jsgrid-grid-header .jsgrid-table').height(), $('.jsgrid-pager-container').height());
-        $('.jsgrid-grid-body').height($('.jsgrid').height()- $('.jsgrid-grid-header').height() - $('.jsgrid-pager-container').height());
+        $('.ts-grid-body').height($('.ts-grid').height()- $('.ts-grid-header').height() - $('.ts-grid-pager-container').height());
     };
     var refreshWidth = function () {
-        $('.jsgrid-grid-body .jsgrid-table').width($('.jsgrid-grid-header .jsgrid-table').width());
+        $('.ts-grid-body .ts-grid-table').width($('.ts-grid-header .ts-grid-table').width());
     };
     $(window).on('load', function () {
         refreshHeight();
@@ -81,8 +63,8 @@
         refreshHeight();
         refreshWidth();
     });
-    $('.jsgrid-grid-body').on('scroll', function (event) {
-        $('.jsgrid-grid-header').scrollLeft(event.target.scrollLeft);
+    $('.ts-grid-body').on('scroll', function (event) {
+        $('.ts-grid-header').scrollLeft(event.target.scrollLeft);
     });
 </script>
 
