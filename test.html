@@ -1,10 +1,10 @@
+
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href="test.css">
     <script src="bower_components/jquery/dist/jquery.js"></script>
 </head>
 <body>
-<h1>Basic Scenario</h1>
 <div id="jsGrid" class="jsgrid" style="position: relative; height: 90%; width: 100%;">
     <div class="jsgrid-grid-header jsgrid-header-scrollbar">
         <table class="jsgrid-table">
@@ -67,7 +67,8 @@
 <script>
 
     var refreshHeight = function () {
-        $('.jsgrid-grid-body').height($('.jsgrid').height()- $('.jsgrid-grid-header .jsgrid-table').height() - $('.jsgrid-pager-container').height());
+        console.log($('.jsgrid').height(), $('.jsgrid-grid-header .jsgrid-table').height(), $('.jsgrid-pager-container').height());
+        $('.jsgrid-grid-body').height($('.jsgrid').height()- $('.jsgrid-grid-header').height() - $('.jsgrid-pager-container').height());
     };
     var refreshWidth = function () {
         $('.jsgrid-grid-body .jsgrid-table').width($('.jsgrid-grid-header .jsgrid-table').width());
@@ -79,6 +80,9 @@
     $(window).on('resize', function () {
         refreshHeight();
         refreshWidth();
+    });
+    $('.jsgrid-grid-body').on('scroll', function (event) {
+        $('.jsgrid-grid-header').scrollLeft(event.target.scrollLeft);
     });
 </script>
 
