@@ -2,8 +2,9 @@
 
     'use strict';
 
-    angular.module('ts.table', []);
-    angular.module('ts.table').directive('tsTable', GridDirective);
+    angular.module('ts.grid', []);
+    angular.module('ts.grid').directive('tsGrid', GridDirective);
+    angular.module('ts.grid').directive('tsGridRow', GridRowDirective);
 
     function GridRowController() {
     }
@@ -11,21 +12,26 @@
     function GridController($scope, $parse) {
         this.scope = $scope;
         this.parse_ = $parse;
-        this.disableCheckboxForRowIf = null;
-        this.showCheckboxForRowIf = null;
-        this.allItemsSelected = false;
-        this.rowControllers = new GridRowController
+        this.rows = [
+            {name: 'name1', age: 'age1', address: 'address1', country: 'country1'},
+            {name: 'name1', age: 'age1', address: 'address1', country: 'country1'}
+        ];
+        //this.disableCheckboxForRowIf = null;
+        //this.showCheckboxForRowIf = null;
+        //this.allItemsSelected = false;
+        //this.rowControllers = new GridRowController
     }
+
     GridController.$inject = ["$scope", "$parse"];
 
     function GridDirective() {
         return {
             restrict: "A",
             controller: GridController,
-            controllerAs: "panTableCtrl",
+            controllerAs: "gridCtrl",
+            templateUrl: "template/ts.grid.html",
             scope: true,
-            compile: function (tElement,tAattr) {
-                var c = tElement.find("thead");
+            compile: function (tElement, tAattr) {
                 //if (c[0]) {
                 //    c.attr("pan-sort-agent", "sortCtrl");
                 //    c.attr("default-sort-key", tAattr.defaultSortKey);
@@ -35,37 +41,21 @@
                 //}
                 //scope, iElement, iAttrs, controller
                 return function (scope, iElement, iAttrs, controller) {
-
-                    var $colResizers = iElement.find('.col-resizer');
-
-                    $colResizers.on('mousedown', function (event) {
-                        var $th = $(this).parent('th');
-                        var $colResizer =  $(this);
-                        var clientX = event.clientX;
-                        iElement.on('mousemove', function (event) {
-                            try{
-                                var deltaClientX = clientX - event.clientX;
-                                $th.width($th.width() - deltaClientX);
-                                clientX = event.clientX;
-                            } catch (e) {
-
-                            }
-                        });
-                        iElement.one('mouseup', function (event) {
-                            $colResizer.off('mousemove');
-                            $th = null;
-                        });
-                        iElement.one('mouseleave', function (event) {
-                            $colResizer.off('mousemove');
-                            $th = null;
-                        });
-                    });
-
                     //iElement.addClass("p6n-table");
                     //controller.initCheckboxSettings_(iAttrs.showCheckboxes, iAttrs.onItemsSelectionChanged, iAttrs.showCheckboxForRowIf, iAttrs.selectedItems, iAttrs.disableCheckboxForRowIf);
                     //scope.$eval(iAttrs.caseSensitive) && iElement.addClass("p6n-case-sensitive-column-headers");
                     //PAN_Xj(iAttrs.fullWidth) && iElement.addClass("p6n-table-full-width")
                 }
+            }
+        }
+    }
+
+    function GridRowDirective() {
+        return {
+            restrict: "C",
+            templateUrl: "template/ts.grid.row.html",
+            scope: {
+                row: '='
             }
         }
     }

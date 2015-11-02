@@ -13,6 +13,10 @@
     border-bottom: 1px solid #cecece;
 }
 
+.ts-grid-body tr {
+    border-bottom: 1px solid #cecece;
+}
+
 .ts-grid th:not(:last-child) {
     border-right: 1px solid #cecece;
 }

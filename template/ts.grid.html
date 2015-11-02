@@ -1,7 +1,21 @@
-<div class="ts-toast ts-toast-{{toast.horizontalAlign}} ts-toast-{{toast.verticalAlign}} {{toast.animation ? 'ts-toast-animate-' + toast.animation : ''}}">
-    <ul class="ts-toast-list" >
-        <li ng-repeat="message in toast.messageList | limitTo:toast.messageLimit">
-            <ts-toast-message  message="message"></ts-toast-message>
-        </li>
-    </ul>
+<div class="ts-grid" style="position: relative; height: 100%;">
+    <div class="ts-grid-header">
+        <table class="ts-grid-table">
+            <tbody>
+            <tr class="ts-grid-header-row">
+                <th>Name</th>
+                <th>Age</th>
+                <th>Address</th>
+                <th>Country</th>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="ts-grid-body">
+        <table class="ts-grid-table">
+            <tbody>
+                <tr class="ts-grid-row" row="row" ng-repeat="row in gridCtrl.rows" ></tr>
+            </tbody>
+        </table>
+    </div>
 </div>
