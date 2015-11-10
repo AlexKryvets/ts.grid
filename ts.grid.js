@@ -12,9 +12,11 @@
     };
 
     function GridRowController($scope, $filter, $parse) {
-        this.row = $scope.row;
+        this.$scope = $scope;
         this.$filter = $filter;
         this.$parse = $parse;
+        this.gridCtrl = $scope.gridCtrl;
+        this.row = $scope.row;
     }
 
     GridRowController.$inject = ["$scope", "$filter", "$parse"];
@@ -26,7 +28,7 @@
         return value;
     }
     GridRowController.prototype.onDblClick = function (row) {
-        console.log(this.row);
+        this.$scope.$emit("ts:grid:" + (this.gridCtrl.name ? this.gridCtrl.name + ":" : "")  + "row-dblClick", this.row);
     }
 
     function GridController($scope) {
