@@ -1,12 +1,9 @@
-<div class="ts-grid" style="position: relative; height: 100%;">
+<div class="ts-grid">
     <div class="ts-grid-header">
         <table class="ts-grid-table">
             <tbody>
             <tr class="ts-grid-header-row">
-                <th>Name</th>
-                <th>Age</th>
-                <th>Address</th>
-                <th>Country</th>
+                <th ng-style="{'width': column.width}" ng-repeat="column in gridCtrl.configuration.columns">{{::column.title}}</th>
             </tr>
             </tbody>
         </table>
@@ -14,8 +11,9 @@
     <div class="ts-grid-body">
         <table class="ts-grid-table">
             <tbody>
-                <tr class="ts-grid-row" row="row" ng-repeat="row in gridCtrl.rows" ></tr>
+            <tr class="ts-grid-row" row="row" ng-repeat="row in gridCtrl.data"></tr>
             </tbody>
         </table>
     </div>
+    <div ts-grid-pager=""></div>
 </div>

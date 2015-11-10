@@ -1,5 +1,6 @@
 .ts-grid {
     position: relative;
+    height: 100%;
     overflow: hidden;
     font-size: 14px;
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
@@ -43,6 +44,10 @@
     border-collapse: collapse;
     border-spacing: 0
 }
+.ts-grid-body tr:hover {
+    cursor: pointer;
+    background-color: #eee;
+}
 
 .ts-grid-table td {
     padding: .5em
@@ -58,4 +63,23 @@
 
 .ts-grid-header::-webkit-scrollbar-track {
     background: #ffffff
+}
+.ts-grid-pager {
+    text-align: center;
+}
+.ts-grid-pager-page, .ts-grid-pager-nav-button {
+    cursor: pointer;
+    padding: .2em .6em;
+    color: #337ab7;
+}
+.ts-grid-pager-page:hover {
+    text-decoration: underline;
+}
+.ts-grid-pager-nav-button:hover{
+    color: #114fb7;
+}
+.ts-grid-pager-page-current {
+    color: #114fb7;
+    pointer-events: none;
+    font-weight: 700;
 }

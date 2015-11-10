@@ -1,1 +1,4 @@
-<td ng-repeat="columnValue in row">{{columnValue}}</td>
+<tr ng-dblclick="gridRowCtrl.onDblClick(row)" >
+    <td ng-style="{'width': column.width}" ng-repeat="column in gridCtrl.configuration.columns">{{gridRowCtrl.getColumnValue(column.name)}}</td>
+</tr>
+
