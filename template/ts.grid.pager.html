@@ -1,4 +1,4 @@
-<div class="ts-grid-pager">
+<div ng-if="gridCtrl.configuration.limit !== false && gridCtrl.pageCount > 1"  class="ts-grid-pager">
     <span class="ts-grid-pager-nav-button" ng-click="gridPagerCtrl.goToPage(0)">&lt&lt</span>
     <span class="ts-grid-pager-nav-button" ng-click="gridPagerCtrl.goToPage(gridCtrl.page - 1)">&lt</span>
     <span class="ts-grid-pager-page"

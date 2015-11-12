@@ -49,6 +49,10 @@
     background-color: #eee;
 }
 
+.ts-grid-selected-row {
+    background-color: #e2e2e2;
+}
+
 .ts-grid-table td {
     padding: .5em
 }

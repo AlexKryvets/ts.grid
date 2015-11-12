@@ -17,6 +17,7 @@
         this.$parse = $parse;
         this.gridCtrl = $scope.gridCtrl;
         this.row = $scope.row;
+        this.isSelected = false;
     }
 
     GridRowController.$inject = ["$scope", "$filter", "$parse"];
@@ -26,10 +27,14 @@
             value = this.$filter('date')(value, "yyyy-MM-dd HH:mm");
         }
         return value;
-    }
+    };
     GridRowController.prototype.onDblClick = function (row) {
         this.$scope.$emit("ts:grid:" + (this.gridCtrl.name ? this.gridCtrl.name + ":" : "")  + "row-dblClick", this.row);
-    }
+    };
+    GridRowController.prototype.onClick = function (event, row) {
+        this.isSelected = !this.isSelected;
+        this.$scope.$emit("ts:grid:" + (this.gridCtrl.name ? this.gridCtrl.name + ":" : "")  + "row-click", this.row);
+    };
 
     function GridController($scope) {
         this.$scope = $scope;
@@ -37,14 +42,15 @@
         this.name = $scope.name;
         this.model = $scope.model;
         this.configuration = angular.extend({}, GRID_CONFIGURATION, $scope.configuration);
+        this.pageCount = 1;
         this.modelParameters = {
-            limit: this.configuration.limit
+            limit: this.configuration.limit === false ? undefined : this.configuration.limit
         };
-        this.getDataByPage(this.page);
         this.disableCheckboxForRowIf = null;
         this.showCheckboxForRowIf = null;
         this.allItemsSelected = false;
         angular.extend($scope.expose, {
+            getDataByPage: this.getDataByPage.bind(this),
             getDataByCurrent: this.getDataByCurrent.bind(this),
             getModelParameters: this.getModelParameters.bind(this)
         });
@@ -60,7 +66,7 @@
 
     GridController.prototype.getDataByPage = function (page) {
         angular.extend(this.modelParameters,{
-            offset: this.configuration.limit * (page >= 0 ? page : 0)
+            offset: this.configuration.limit === false ? undefined : this.configuration.limit * (page >= 0 ? page : 0)
         });
 
         var promise = this.model.getGridData(this.modelParameters);
@@ -69,15 +75,17 @@
         promise.then(function (data) {
             this.data = data;
             this.totalCount = data.totalCount;
+            this.pageCount = Math.ceil(this.totalCount / this.configuration.limit);
+            this.$scope.refreshSize();
         }.bind(this));
         promise.finally(function () {
-            this.$scope.$emit("ts:grid:load-end");
+            this.$scope.$emit("ts:grid:" + (this.name ? this.name + ":" : "")  + "load-end");
         }.bind(this));
         return promise;
     };
     GridController.$inject = ["$scope", "$parse"];
 
-    function GridDirective() {
+    function GridDirective($timeout) {
         return {
             restrict: "A",
             controller: GridController,
@@ -92,20 +100,24 @@
             compile: function (tElement, tAttr) {
                 return function (scope, iElement, iAttrs, controller) {
                     var refreshHeight = function () {
-                        $('.ts-grid-body').height($('.ts-grid').height() - $('.ts-grid-header').height() - $('.ts-grid-pager').height());
+                        iElement.find('.ts-grid-body').height(iElement.find('.ts-grid').height() - iElement.find('.ts-grid-header').height() - iElement.find('.ts-grid-pager').height());
                     };
                     var refreshWidth = function () {
-                        $('.ts-grid-body .ts-grid-table').width($('.ts-grid-header .ts-grid-table').width());
+                        iElement.find('.ts-grid-body .ts-grid-table').width(iElement.find('.ts-grid-header .ts-grid-table').width());
+                    };
+                    var refreshSize = function () {
+                        $timeout(function () {
+                            refreshHeight();
+                            refreshWidth();
+                        });
                     };
 
-                    scope.$on("ts:grid:load-end", function () {
-                        refreshHeight();
-                        refreshWidth();
-                    });
+                    scope.refreshSize = function () {
+                        refreshSize();
+                    };
 
                     $(window).on('resize', function () {
-                        refreshHeight();
-                        refreshWidth();
+                        refreshSize();
                     });
                     $('.ts-grid-body').on('scroll', function (event) {
                         $('.ts-grid-header').scrollLeft(event.target.scrollLeft);
@@ -114,6 +126,7 @@
             }
         }
     }
+    GridDirective.$inject = ["$timeout"];
 
     function GridRowDirective() {
         return {
@@ -142,8 +155,7 @@
     }
 
     GridPagerController.prototype.getPageNumbers = function () {
-        var length = Math.ceil(this.gridCtrl.totalCount / this.$scope.configuration.limit);
-        return Array.apply(null, {length: length}).map(Number.call, Number);
+        return Array.apply(null, {length: this.gridCtrl.pageCount}).map(Number.call, Number);
     }
     GridPagerController.prototype.goToPage = function (pageNumber) {
         if (pageNumber >=0 && this.getPageNumbers().length > pageNumber && this.gridCtrl.page != pageNumber) {
