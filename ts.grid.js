@@ -11,30 +11,11 @@
         limit: 50
     };
 
-    function GridRowController($scope, $filter, $parse) {
-        this.$scope = $scope;
-        this.$filter = $filter;
-        this.$parse = $parse;
-        this.gridCtrl = $scope.gridCtrl;
-        this.row = $scope.row;
-        this.isSelected = false;
+    var delegateInterface = {
+        onRowClick: angular.noop,
+        onRowDoubleClick: angular.noop,
+        onGetDataStart: angular.noop
     }
-
-    GridRowController.$inject = ["$scope", "$filter", "$parse"];
-    GridRowController.prototype.getColumnValue = function (columnName) {
-        var value = this.$parse(columnName)(this.row);
-        if (value instanceof Date) {
-            value = this.$filter('date')(value, "yyyy-MM-dd HH:mm");
-        }
-        return value;
-    };
-    GridRowController.prototype.onDblClick = function (row) {
-        this.$scope.$emit("ts:grid:" + (this.gridCtrl.name ? this.gridCtrl.name + ":" : "")  + "row-dblClick", this.row);
-    };
-    GridRowController.prototype.onClick = function (event, row) {
-        this.isSelected = !this.isSelected;
-        this.$scope.$emit("ts:grid:" + (this.gridCtrl.name ? this.gridCtrl.name + ":" : "")  + "row-click", this.row);
-    };
 
     function GridController($scope) {
         this.$scope = $scope;
@@ -42,19 +23,19 @@
         this.name = $scope.name;
         this.model = $scope.model;
         this.configuration = angular.extend({}, GRID_CONFIGURATION, $scope.configuration);
+        $scope.delegate = angular.extend({}, delegateInterface, $scope.delegate);
         this.pageCount = 1;
         this.modelParameters = {
             limit: this.configuration.limit === false ? undefined : this.configuration.limit
         };
-        this.disableCheckboxForRowIf = null;
-        this.showCheckboxForRowIf = null;
-        this.allItemsSelected = false;
+        this.selectedRows = [];
         angular.extend($scope.expose, {
             getDataByPage: this.getDataByPage.bind(this),
             getDataByCurrent: this.getDataByCurrent.bind(this),
             getModelParameters: this.getModelParameters.bind(this)
         });
     }
+    GridController.$inject = ["$scope", "$parse"];
 
     GridController.prototype.getModelParameters = function () {
         return this.modelParameters;
@@ -64,13 +45,26 @@
         return this.getDataByPage(this.page);
     };
 
+    GridController.prototype.selectRow = function (event, rowCtrl) {
+        if (!event.ctrlKey) {
+            for(var i = 0, length = this.selectedRows.length; i < length; i++) {
+                var selectedRow = this.selectedRows[i];
+                if (selectedRow instanceof GridRowController) {
+                    selectedRow.isSelected = false;
+                }
+            }
+            this.selectedRows = [];
+        }
+        this.selectedRows.push(rowCtrl);
+    };
+
     GridController.prototype.getDataByPage = function (page) {
         angular.extend(this.modelParameters,{
             offset: this.configuration.limit === false ? undefined : this.configuration.limit * (page >= 0 ? page : 0)
         });
 
         var promise = this.model.getGridData(this.modelParameters);
-        this.$scope.$emit("ts:grid:" + (this.name ? this.name + ":" : "")  + "load-start", promise);
+        this.$scope.delegate.onGetDataStart(promise);
         this.data = [];
         promise.then(function (data) {
             this.data = data;
@@ -79,11 +73,55 @@
             this.$scope.refreshSize();
         }.bind(this));
         promise.finally(function () {
-            this.$scope.$emit("ts:grid:" + (this.name ? this.name + ":" : "")  + "load-end");
         }.bind(this));
         return promise;
     };
-    GridController.$inject = ["$scope", "$parse"];
+
+    function GridRowController($scope, $filter, $parse) {
+        this.$scope = $scope;
+        this.$filter = $filter;
+        this.$parse = $parse;
+        this.gridCtrl = $scope.gridCtrl;
+        this.row = $scope.row;
+        this.index = $scope.index;
+        this.isSelected = false;
+    }
+    GridRowController.$inject = ["$scope", "$filter", "$parse"];
+
+    GridRowController.prototype.getColumnValue = function (columnName) {
+        var value = this.$parse(columnName)(this.row);
+        if (value instanceof Date) {
+            value = this.$filter('date')(value, "yyyy-MM-dd HH:mm");
+        }
+        return value;
+    };
+
+    GridRowController.prototype.onDblClick = function (event) {
+        this.$scope.delegate.onRowDoubleClick(event, this.row);
+    };
+
+    GridRowController.prototype.onClick = function (event) {
+        this.isSelected = !this.isSelected;
+        this.gridCtrl.selectRow(event, this);
+        this.$scope.delegate.onRowClick(event, this.row);
+    };
+
+    function GridPagerController($scope) {
+        this.$scope = $scope;
+        this.gridCtrl = $scope.gridCtrl;
+    }
+    GridPagerController.$inject = ["$scope"];
+
+    GridPagerController.prototype.getPageNumbers = function () {
+        return Array.apply(null, {length: this.gridCtrl.pageCount}).map(Number.call, Number);
+    };
+
+    GridPagerController.prototype.goToPage = function (pageNumber) {
+        if (pageNumber >=0 && this.getPageNumbers().length > pageNumber && this.gridCtrl.page != pageNumber) {
+            this.gridCtrl.page = pageNumber
+            this.gridCtrl.getDataByPage(pageNumber);
+        }
+    };
 
     function GridDirective($timeout) {
         return {
@@ -95,7 +133,8 @@
                 name: "@tsGrid",
                 expose: "=",
                 model: "=",
-                configuration: "="
+                configuration: "=",
+                delegate: "="
             },
             compile: function (tElement, tAttr) {
                 return function (scope, iElement, iAttrs, controller) {
@@ -148,22 +187,4 @@
 
         }
     }
-
-    function GridPagerController($scope) {
-        this.$scope = $scope;
-        this.gridCtrl = $scope.gridCtrl;
-    }
-
-    GridPagerController.prototype.getPageNumbers = function () {
-        return Array.apply(null, {length: this.gridCtrl.pageCount}).map(Number.call, Number);
-    }
-    GridPagerController.prototype.goToPage = function (pageNumber) {
-        if (pageNumber >=0 && this.getPageNumbers().length > pageNumber && this.gridCtrl.page != pageNumber) {
-            this.gridCtrl.page = pageNumber
-            this.gridCtrl.getDataByPage(pageNumber);
-        }
-    }
-    GridPagerController.$inject = ["$scope"];
-
-
 })(window, window.angular);

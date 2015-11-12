@@ -11,7 +11,7 @@
     <div class="ts-grid-body">
         <table class="ts-grid-table">
             <tbody>
-            <tr class="ts-grid-row" row="row" ng-repeat="row in gridCtrl.data"></tr>
+            <tr class="ts-grid-row" ng-repeat="(index, row) in gridCtrl.data"></tr>
             </tbody>
         </table>
     </div>

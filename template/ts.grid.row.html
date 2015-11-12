@@ -1,4 +1,4 @@
-<tr ng-click="gridRowCtrl.onClick($event, row)" ng-dblclick="gridRowCtrl.onDblClick(row)" ng-class="{'ts-grid-selected-row': gridRowCtrl.isSelected}">
+<tr ng-click="gridRowCtrl.onClick($event)" ng-dblclick="gridRowCtrl.onDblClick($event)" ng-class="{'ts-grid-selected-row': gridRowCtrl.isSelected}">
     <td ng-style="{'width': column.width}" ng-repeat="column in gridCtrl.configuration.columns">{{gridRowCtrl.getColumnValue(column.name)}}</td>
 </tr>
 

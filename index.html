@@ -9,7 +9,7 @@
     <script type="text/javascript" src="ts.grid.js"></script>
     <script type="text/javascript" src="app.js"></script>
 </head>
-<body ng-controller="AppController">
-<div ts-grid="" ></div>
+<body ng-controller="AppController as ctrl">
+<div ts-grid="" expose="ctrl.grid" model="ctrl.grid.model" configuration="ctrl.grid.configuration" delegate="ctrl.grid.delegate"></div>
 </body>
 </html>
