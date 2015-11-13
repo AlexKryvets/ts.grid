@@ -12,6 +12,7 @@
     };
 
     var delegateInterface = {
+        onCreate: angular.noop,
         onRowClick: angular.noop,
         onRowDoubleClick: angular.noop,
         onGetDataStart: angular.noop
@@ -34,6 +35,7 @@
             getDataByCurrent: this.getDataByCurrent.bind(this),
             getModelParameters: this.getModelParameters.bind(this)
         });
+        $scope.delegate.onCreate();
     }
     GridController.$inject = ["$scope", "$parse"];
 
