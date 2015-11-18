@@ -37,16 +37,22 @@ function AppController ($scope, $q, $timeout) {
     };
 
     this.grid.delegate = {
-        onRowClick: this.onGridRowClick.bind(this)
-    }
-
-    $timeout(function () {
-        this.grid.getDataByCurrent();
-    }.bind(this));
+        onCreate: this.onGridCreate.bind(this),
+        onRowClick: this.onGridRowClick.bind(this),
+        onRowSelect: this.onGridRowSelect.bind(this)
+    };
 }
+
+AppController.prototype.onGridCreate = function () {
+    this.grid.getData();
+};
 
 AppController.prototype.onGridRowClick = function () {
     console.log(this, arguments);
-}
+};
+
+AppController.prototype.onGridRowSelect = function () {
+    console.log("select", this, arguments);
+};
 
 AppController.$inject = ["$scope", "$q", "$timeout"];

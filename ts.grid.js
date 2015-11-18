@@ -14,6 +14,7 @@
     var delegateInterface = {
         onCreate: angular.noop,
         onRowClick: angular.noop,
+        onRowSelect: angular.noop,
         onRowDoubleClick: angular.noop,
         onGetDataStart: angular.noop
     }
@@ -31,7 +32,8 @@
         angular.extend($scope.expose, {
             getData: this.getData.bind(this),
             getDataByPage: this.getDataByPage.bind(this),
-            getModelParameters: this.getModelParameters.bind(this)
+            getModelParameters: this.getModelParameters.bind(this),
+            selectRow: this.selectRow.bind(this)
         });
         $scope.delegate.onCreate();
     }
@@ -41,17 +43,43 @@
         return this.modelParameters;
     };
 
-    GridController.prototype.selectRow = function (event, rowCtrl) {
+    GridController.prototype.onRowClick = function (event, rowCtrl) {
         if (!event.ctrlKey) {
-            for(var i = 0, length = this.selectedRows.length; i < length; i++) {
-                var selectedRow = this.selectedRows[i];
-                if (selectedRow instanceof GridRowController) {
-                    selectedRow.isSelected = false;
-                }
-            }
-            this.selectedRows = [];
+            this.deselectRows();
         }
+        rowCtrl.isSelected = !rowCtrl.isSelected;
         this.selectedRows.push(rowCtrl);
+        this.$scope.delegate.onRowClick(event, rowCtrl.row);
+        if (rowCtrl.isSelected) {
+            this.$scope.delegate.onRowSelect(event, rowCtrl.row);
+        }
+    };
+
+    GridController.prototype.onRowDoubleClick = function (event, rowCtrl) {
+        if (!event.ctrlKey) {
+            this.deselectRows();
+        }
+        var wasSelected = rowCtrl.isSelected;
+        rowCtrl.isSelected = true;
+        this.selectedRows.push(rowCtrl);
+        this.$scope.delegate.onRowDoubleClick(event, rowCtrl.row);
+        if (!wasSelected) {
+            this.$scope.delegate.onRowSelect(event, rowCtrl.row);
+        }
+    };
+
+    GridController.prototype.selectRow = function (where) {
+
+    };
+
+    GridController.prototype.deselectRows = function () {
+        for(var i = 0, length = this.selectedRows.length; i < length; i++) {
+            var selectedRow = this.selectedRows[i];
+            if (selectedRow instanceof GridRowController) {
+                selectedRow.isSelected = false;
+            }
+        }
+        this.selectedRows = [];
     };
 
     GridController.prototype.getData = function () {
@@ -101,15 +129,11 @@
     };
 
     GridRowController.prototype.onDblClick = function (event) {
-        this.isSelected = true;
-        this.gridCtrl.selectRow(event, this);
-        this.$scope.delegate.onRowDoubleClick(event, this.row);
+        this.gridCtrl.onRowDoubleClick(event, this);
     };
 
     GridRowController.prototype.onClick = function (event) {
-        this.isSelected = !this.isSelected;
-        this.gridCtrl.selectRow(event, this);
-        this.$scope.delegate.onRowClick(event, this.row);
+        this.gridCtrl.onRowDoubleClick(event, this);
     };
 
     function GridPagerController($scope) {
