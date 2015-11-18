@@ -39,20 +39,25 @@ function AppController ($scope, $q, $timeout) {
     this.grid.delegate = {
         onCreate: this.onGridCreate.bind(this),
         onRowClick: this.onGridRowClick.bind(this),
+        onRowDoubleClick: this.onGridRowDoubleClick.bind(this),
         onRowSelect: this.onGridRowSelect.bind(this)
     };
 }
 
-AppController.prototype.onGridCreate = function () {
+AppController.prototype.onGridCreate = function (gridCtrl) {
     this.grid.getData();
 };
 
 AppController.prototype.onGridRowClick = function () {
-    console.log(this, arguments);
+    console.log("click");
+};
+
+AppController.prototype.onGridRowDoubleClick = function () {
+    console.log("dblclick");
 };
 
 AppController.prototype.onGridRowSelect = function () {
-    console.log("select", this, arguments);
+    console.log("select");
 };
 
 AppController.$inject = ["$scope", "$q", "$timeout"];

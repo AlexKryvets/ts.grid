@@ -44,28 +44,20 @@
     };
 
     GridController.prototype.onRowClick = function (event, rowCtrl) {
+        var wasSelected = rowCtrl.isSelected;
         if (!event.ctrlKey) {
             this.deselectRows();
         }
-        rowCtrl.isSelected = !rowCtrl.isSelected;
+        rowCtrl.isSelected = !wasSelected;
         this.selectedRows.push(rowCtrl);
         this.$scope.delegate.onRowClick(event, rowCtrl.row);
-        if (rowCtrl.isSelected) {
+        if (!wasSelected) {
             this.$scope.delegate.onRowSelect(event, rowCtrl.row);
         }
     };
 
     GridController.prototype.onRowDoubleClick = function (event, rowCtrl) {
-        if (!event.ctrlKey) {
-            this.deselectRows();
-        }
-        var wasSelected = rowCtrl.isSelected;
-        rowCtrl.isSelected = true;
-        this.selectedRows.push(rowCtrl);
         this.$scope.delegate.onRowDoubleClick(event, rowCtrl.row);
-        if (!wasSelected) {
-            this.$scope.delegate.onRowSelect(event, rowCtrl.row);
-        }
     };
 
     GridController.prototype.selectRow = function (where) {
@@ -133,7 +125,7 @@
     };
 
     GridRowController.prototype.onClick = function (event) {
-        this.gridCtrl.onRowDoubleClick(event, this);
+        this.gridCtrl.onRowClick(event, this);
     };
 
     function GridPagerController($scope) {
