@@ -10,14 +10,13 @@
         limit: 50
     };
 
-    var delegateInterface = {
-        onCreate: angular.noop,
-        onRowClick: angular.noop,
-        onRowSelect: angular.noop,
-        onRowDoubleClick: angular.noop,
-        onGetDataStart: angular.noop,
-        onGetDataEnd: angular.noop
-    }
+    function Delegate () {}
+    Delegate.prototype.onCreate = angular.noop;
+    Delegate.prototype.onRowSelect = angular.noop;
+    Delegate.prototype.onRowClick = angular.noop;
+    Delegate.prototype.onRowDoubleClick = angular.noop;
+    Delegate.prototype.onGetDataStart = angular.noop;
+    Delegate.prototype.onGetDataEnd = angular.noop;
 
     function GridController($scope, $parse, dateFilter) {
         this.$scope = $scope;
