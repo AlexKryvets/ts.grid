@@ -36,7 +36,7 @@
             getData: this.getData.bind(this),
             getDataByPage: this.getDataByPage.bind(this),
             getModelParameters: this.getModelParameters.bind(this),
-            setSelectionByIndex: this.setSelectionByIndex.bind(this)
+            selectByIndex: this.selectByIndex.bind(this)
         });
 
         $scope.delegate.onCreate();
@@ -64,7 +64,7 @@
         this.$scope.delegate.onRowDoubleClick(event, row);
     };
 
-    GridController.prototype.setSelectionByIndex = function (index, isSelected) {
+    GridController.prototype.selectByIndex = function (index, isSelected) {
         var select = function (index) {
             var row = this.data[index];
             row.isSelected = !!isSelected;

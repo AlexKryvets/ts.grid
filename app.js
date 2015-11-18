@@ -48,7 +48,7 @@ function AppController ($scope, $q, $timeout) {
 AppController.prototype.onGridCreate = function (gridCtrl) {
     var promise = this.grid.getData();
     promise.then(function () {
-        this.grid.setSelectionByIndex([1,3], true);
+        this.grid.selectByIndex([1,3], true);
     }.bind(this));
 };
 
