@@ -26,13 +26,11 @@
         this.configuration = angular.extend({}, GRID_CONFIGURATION, $scope.configuration);
         $scope.delegate = angular.extend({}, delegateInterface, $scope.delegate);
         this.pageCount = 1;
-        this.modelParameters = {
-            limit: this.configuration.limit === false ? undefined : this.configuration.limit
-        };
+        this.modelParameters = {};
         this.selectedRows = [];
         angular.extend($scope.expose, {
+            getData: this.getData.bind(this),
             getDataByPage: this.getDataByPage.bind(this),
-            getDataByCurrent: this.getDataByCurrent.bind(this),
             getModelParameters: this.getModelParameters.bind(this)
         });
         $scope.delegate.onCreate();
@@ -41,10 +39,6 @@
 
     GridController.prototype.getModelParameters = function () {
         return this.modelParameters;
-    };
-
-    GridController.prototype.getDataByCurrent = function () {
-        return this.getDataByPage(this.page);
     };
 
     GridController.prototype.selectRow = function (event, rowCtrl) {
@@ -60,11 +54,14 @@
         this.selectedRows.push(rowCtrl);
     };
 
-    GridController.prototype.getDataByPage = function (page) {
-        angular.extend(this.modelParameters,{
-            offset: this.configuration.limit === false ? undefined : this.configuration.limit * (page >= 0 ? page : 0)
-        });
-
+    GridController.prototype.getData = function () {
+        if (this.configuration.limit === false) {
+            delete this.modelParameters.limit;
+            delete this.modelParameters.offset;
+        } else {
+            this.modelParameters.limit = this.configuration.limit;
+            this.modelParameters.offset = this.configuration.limit * (this.page >= 0 ? this.page : 0);
+        }
         var promise = this.model.getGridData(this.modelParameters);
         this.$scope.delegate.onGetDataStart(promise);
         this.data = [];
@@ -77,6 +74,11 @@
         promise.finally(function () {
         }.bind(this));
         return promise;
+    };
+
+    GridController.prototype.getDataByPage = function (page) {
+        this.page = page;
+        return this.getData();
     };
 
     function GridRowController($scope, $filter, $parse) {
@@ -99,6 +101,8 @@
     };
 
     GridRowController.prototype.onDblClick = function (event) {
+        this.isSelected = true;
+        this.gridCtrl.selectRow(event, this);
         this.$scope.delegate.onRowDoubleClick(event, this.row);
     };
 
