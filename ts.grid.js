@@ -4,7 +4,6 @@
 
     angular.module('ts.grid', []);
     angular.module('ts.grid').directive('tsGrid', GridDirective);
-    angular.module('ts.grid').directive('tsGridRow', GridRowDirective);
     angular.module('ts.grid').directive('tsGridPager', GridPagerDirective);
 
     var GRID_CONFIGURATION = {
@@ -19,57 +18,71 @@
         onGetDataStart: angular.noop
     }
 
-    function GridController($scope) {
+    function GridController($scope, $parse, dateFilter) {
         this.$scope = $scope;
+        this.$parse = $parse;
+        this.dateFilter = dateFilter;
+
         this.page = 0;
+        this.pageCount = 1;
+        this.modelParameters = {};
+        this.selectedRows = [];
+
         this.name = $scope.name;
         this.model = $scope.model;
         this.configuration = angular.extend({}, GRID_CONFIGURATION, $scope.configuration);
         $scope.delegate = angular.extend({}, delegateInterface, $scope.delegate);
-        this.pageCount = 1;
-        this.modelParameters = {};
-        this.selectedRows = [];
         angular.extend($scope.expose, {
             getData: this.getData.bind(this),
             getDataByPage: this.getDataByPage.bind(this),
             getModelParameters: this.getModelParameters.bind(this),
-            selectRow: this.selectRow.bind(this)
+            setSelectionByIndex: this.setSelectionByIndex.bind(this)
         });
+
         $scope.delegate.onCreate();
     }
-    GridController.$inject = ["$scope", "$parse"];
+    GridController.$inject = ["$scope", "$parse", "dateFilter"];
 
     GridController.prototype.getModelParameters = function () {
         return this.modelParameters;
     };
 
-    GridController.prototype.onRowClick = function (event, rowCtrl) {
-        var wasSelected = rowCtrl.isSelected;
+    GridController.prototype.onRowClick = function (event, row) {
+        var wasSelected = row.isSelected;
         if (!event.ctrlKey) {
             this.deselectRows();
         }
-        rowCtrl.isSelected = !wasSelected;
-        this.selectedRows.push(rowCtrl);
-        this.$scope.delegate.onRowClick(event, rowCtrl.row);
+        row.isSelected = !wasSelected;
+        this.selectedRows.push(row);
+        this.$scope.delegate.onRowClick(event, row);
         if (!wasSelected) {
-            this.$scope.delegate.onRowSelect(event, rowCtrl.row);
+            this.$scope.delegate.onRowSelect(row);
         }
     };
 
-    GridController.prototype.onRowDoubleClick = function (event, rowCtrl) {
-        this.$scope.delegate.onRowDoubleClick(event, rowCtrl.row);
+    GridController.prototype.onRowDoubleClick = function (event, row) {
+        this.$scope.delegate.onRowDoubleClick(event, row);
     };
 
-    GridController.prototype.selectRow = function (where) {
+    GridController.prototype.setSelectionByIndex = function (index, isSelected) {
+        var select = function (index) {
+            var row = this.data[index];
+            row.isSelected = !!isSelected;
+            this.selectedRows.push(row);
+            this.$scope.delegate.onRowSelect(row);
+        }.bind(this);
+
+        if (angular.isArray(index)) {
+            angular.forEach(index, select);
+        } else {
+            select(index);
+        }
 
     };
 
     GridController.prototype.deselectRows = function () {
         for(var i = 0, length = this.selectedRows.length; i < length; i++) {
-            var selectedRow = this.selectedRows[i];
-            if (selectedRow instanceof GridRowController) {
-                selectedRow.isSelected = false;
-            }
+            this.selectedRows[i].isSelected = false;
         }
         this.selectedRows = [];
     };
@@ -101,32 +114,14 @@
         return this.getData();
     };
 
-    function GridRowController($scope, $filter, $parse) {
-        this.$scope = $scope;
-        this.$filter = $filter;
-        this.$parse = $parse;
-        this.gridCtrl = $scope.gridCtrl;
-        this.row = $scope.row;
-        this.index = $scope.index;
-        this.isSelected = false;
-    }
-    GridRowController.$inject = ["$scope", "$filter", "$parse"];
-
-    GridRowController.prototype.getColumnValue = function (columnName) {
-        var value = this.$parse(columnName)(this.row);
+    GridController.prototype.getColumnValue = function (columnName, row) {
+        var value = this.$parse(columnName)(row);
         if (value instanceof Date) {
-            value = this.$filter('date')(value, "yyyy-MM-dd HH:mm");
+            value = this.dateFilter(value, "yyyy-MM-dd HH:mm");
         }
         return value;
     };
 
-    GridRowController.prototype.onDblClick = function (event) {
-        this.gridCtrl.onRowDoubleClick(event, this);
-    };
-
-    GridRowController.prototype.onClick = function (event) {
-        this.gridCtrl.onRowClick(event, this);
-    };
 
     function GridPagerController($scope) {
         this.$scope = $scope;
@@ -188,16 +183,6 @@
         }
     }
     GridDirective.$inject = ["$timeout"];
-
-    function GridRowDirective() {
-        return {
-            replace: true,
-            restrict: "C",
-            controller: GridRowController,
-            controllerAs: "gridRowCtrl",
-            templateUrl: "template/ts.grid.row.html"
-        }
-    }
 
     function GridPagerDirective() {
         return {

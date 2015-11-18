@@ -11,7 +11,14 @@
     <div class="ts-grid-body">
         <table class="ts-grid-table">
             <tbody>
-            <tr class="ts-grid-row" ng-repeat="(index, row) in gridCtrl.data"></tr>
+            <tr ></tr>
+            <tr class="ts-grid-row"
+                ng-class="{'ts-grid-selected-row': row.isSelected}"
+                ng-repeat="(index, row) in gridCtrl.data"
+                ng-click="gridCtrl.onRowClick($event, row)"
+                ng-dblclick="gridCtrl.onRowDoubleClick($event, row)">
+                <td ng-style="{'width': column.width}" ng-repeat="column in gridCtrl.configuration.columns">{{gridCtrl.getColumnValue(column.name, row)}}</td>
+            </tr>
             </tbody>
         </table>
     </div>

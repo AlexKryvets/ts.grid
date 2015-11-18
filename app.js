@@ -16,11 +16,11 @@ function AppController ($scope, $q, $timeout) {
             getGridData: function (params) {
                 var deferred = $q.defer();
                 var data = [
-                    {id: 1, name: "Name 1"},
-                    {id: 2, name: "Name 2"},
-                    {id: 3, name: "Name 3"},
-                    {id: 4, name: "Name 4"},
-                    {id: 5, name: "Name 5"}
+                    {id: 1, name: "Name 1", date: new Date},
+                    {id: 2, name: "Name 2", date: new Date},
+                    {id: 3, name: "Name 3", date: new Date},
+                    {id: 4, name: "Name 4", date: new Date},
+                    {id: 5, name: "Name 5", date: new Date}
                 ];
                 data.totalCount = 5;
                 deferred.resolve(data);
@@ -31,7 +31,8 @@ function AppController ($scope, $q, $timeout) {
             limit: 5,
             columns: [
                 {title: "ID", name: "id", width: "50px"},
-                {title: "Name", name: "name", width: "50px"}
+                {title: "Name", name: "name", width: "50px"},
+                {title: "Date", name: "date", width: "50px"}
             ]
         }
     };
@@ -45,7 +46,10 @@ function AppController ($scope, $q, $timeout) {
 }
 
 AppController.prototype.onGridCreate = function (gridCtrl) {
-    this.grid.getData();
+    var promise = this.grid.getData();
+    promise.then(function () {
+        this.grid.setSelectionByIndex([1,3], true);
+    }.bind(this));
 };
 
 AppController.prototype.onGridRowClick = function () {
