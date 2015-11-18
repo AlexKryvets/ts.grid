@@ -37,19 +37,11 @@ function AppController ($scope, $q, $timeout) {
         }
     };
 
-    this.grid.delegate = {
-        onCreate: this.onGridCreate.bind(this),
-        onRowClick: this.onGridRowClick.bind(this),
-        onRowDoubleClick: this.onGridRowDoubleClick.bind(this),
-        onRowSelect: this.onGridRowSelect.bind(this)
-    };
+    this.grid.delegate = new GridDelegate;
 }
 
 AppController.prototype.onGridCreate = function (gridCtrl) {
-    var promise = this.grid.getData();
-    promise.then(function () {
-        this.grid.selectByIndex([1,3], true);
-    }.bind(this));
+
 };
 
 AppController.prototype.onGridRowClick = function () {
@@ -65,3 +57,13 @@ AppController.prototype.onGridRowSelect = function () {
 };
 
 AppController.$inject = ["$scope", "$q", "$timeout"];
+
+function GridDelegate () {
+}
+
+GridDelegate.prototype.onCreate = function (gridCtrl) {
+    var promise = gridCtrl.getData();
+    promise.then(function () {
+        gridCtrl.selectByIndex([1,3], true);
+    }.bind(this));
+};
