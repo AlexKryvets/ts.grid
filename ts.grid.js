@@ -15,7 +15,8 @@
         onRowClick: angular.noop,
         onRowSelect: angular.noop,
         onRowDoubleClick: angular.noop,
-        onGetDataStart: angular.noop
+        onGetDataStart: angular.noop,
+        onGetDataEnd: angular.noop
     }
 
     function GridController($scope, $parse, dateFilter) {
@@ -36,7 +37,7 @@
             getData: this.getData.bind(this),
             getDataByPage: this.getDataByPage.bind(this),
             getModelParameters: this.getModelParameters.bind(this),
-            selectByIndex: this.selectByIndex.bind(this)
+            selectRowByIndex: this.selectRowByIndex.bind(this)
         });
 
         $scope.delegate.onCreate();
@@ -64,7 +65,7 @@
         this.$scope.delegate.onRowDoubleClick(event, row);
     };
 
-    GridController.prototype.selectByIndex = function (index, isSelected) {
+    GridController.prototype.selectRowByIndex = function (index, isSelected) {
         var select = function (index) {
             var row = this.data[index];
             row.isSelected = !!isSelected;
@@ -105,6 +106,7 @@
             this.$scope.refreshSize();
         }.bind(this));
         promise.finally(function () {
+            this.$scope.delegate.onGetDataEnd(this.data);
         }.bind(this));
         return promise;
     };
