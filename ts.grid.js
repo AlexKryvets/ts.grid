@@ -31,7 +31,11 @@
         this.name = $scope.name;
         this.model = $scope.model;
         this.configuration = angular.extend({}, GRID_CONFIGURATION, $scope.configuration);
-        $scope.delegate = angular.extend({}, delegateInterface, $scope.delegate);
+        if ($scope.delegate) {
+            $scope.delegate.prototype = Object.create(Delegate.prototype);
+        } else {
+            $scope.delegate = new Delegate;
+        }
         angular.extend($scope.expose, {
             getData: this.getData.bind(this),
             getDataByPage: this.getDataByPage.bind(this),
@@ -39,7 +43,7 @@
             selectRowByIndex: this.selectRowByIndex.bind(this)
         });
 
-        $scope.delegate.onCreate();
+        $scope.delegate.onCreate(this);
     }
     GridController.$inject = ["$scope", "$parse", "dateFilter"];
 
@@ -96,6 +100,7 @@
             this.modelParameters.offset = this.configuration.limit * (this.page >= 0 ? this.page : 0);
         }
         var promise = this.model.getGridData(this.modelParameters);
+        console.log(this.$scope.delegate)
         this.$scope.delegate.onGetDataStart(promise);
         this.data = [];
         promise.then(function (data) {
