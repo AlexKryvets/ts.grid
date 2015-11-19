@@ -163,7 +163,13 @@
                         iElement.find('.ts-grid-body').height(iElement.find('.ts-grid').height() - iElement.find('.ts-grid-header').height() - iElement.find('.ts-grid-pager').height());
                     };
                     var refreshWidth = function () {
-                        iElement.find('.ts-grid-body .ts-grid-table').width(iElement.find('.ts-grid-header .ts-grid-table').width());
+                        var gridBody = iElement.find('.ts-grid-body');
+                        var gridTableBody = iElement.find('.ts-grid-body .ts-grid-table');
+                        if (gridBody[0].scrollHeight > gridBody.height()) {
+                            gridTableBody.width(iElement.find('.ts-grid-header .ts-grid-table').width());
+                        } else {
+                            gridTableBody.width(iElement.find('.ts-grid-header').width());
+                        }
                     };
                     var refreshSize = function () {
                         $timeout(function () {
