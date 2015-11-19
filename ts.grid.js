@@ -10,13 +10,16 @@
         limit: 50
     };
 
-    function Delegate () {}
-    Delegate.prototype.onCreate = angular.noop;
-    Delegate.prototype.onRowSelect = angular.noop;
-    Delegate.prototype.onRowClick = angular.noop;
-    Delegate.prototype.onRowDoubleClick = angular.noop;
-    Delegate.prototype.onGetDataStart = angular.noop;
-    Delegate.prototype.onGetDataEnd = angular.noop;
+    function abstractMethod() {}
+
+    function GridDelegate() {
+        this.onCreate = abstractMethod;
+        this.onRowSelect = abstractMethod;
+        this.onRowClick = abstractMethod;
+        this.onRowDoubleClick = abstractMethod;
+        this.onGetDataStart = abstractMethod;
+        this.onGetDataEnd = abstractMethod;
+    }
 
     function GridController($scope, $parse, dateFilter) {
         this.$scope = $scope;
@@ -31,11 +34,7 @@
         this.name = $scope.name;
         this.model = $scope.model;
         this.configuration = angular.extend({}, GRID_CONFIGURATION, $scope.configuration);
-        if ($scope.delegate) {
-            $scope.delegate.prototype = Object.create(Delegate.prototype);
-        } else {
-            $scope.delegate = new Delegate;
-        }
+        $scope.delegate = angular.extend(new GridDelegate, $scope.delegate);
         angular.extend($scope.expose, {
             getData: this.getData.bind(this),
             getDataByPage: this.getDataByPage.bind(this),
@@ -100,7 +99,6 @@
             this.modelParameters.offset = this.configuration.limit * (this.page >= 0 ? this.page : 0);
         }
         var promise = this.model.getGridData(this.modelParameters);
-        console.log(this.$scope.delegate)
         this.$scope.delegate.onGetDataStart(promise);
         this.data = [];
         promise.then(function (data) {

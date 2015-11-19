@@ -37,7 +37,7 @@ function AppController ($scope, $q, $timeout) {
         }
     };
 
-    this.grid.delegate = new GridDelegate;
+    this.grid.delegate = new Delegate(this);
 }
 
 AppController.prototype.onGridCreate = function (gridCtrl) {
@@ -58,12 +58,11 @@ AppController.prototype.onGridRowSelect = function () {
 
 AppController.$inject = ["$scope", "$q", "$timeout"];
 
-function GridDelegate () {
+function Delegate (ctrl) {
+    this.onCreate = function (gridCtrl) {
+        var promise = ctrl.grid.getData();
+        promise.then(function () {
+            ctrl.grid.selectRowByIndex([1,3], true);
+        }.bind(this));
+    };
 }
-
-GridDelegate.prototype.onCreate = function (gridCtrl) {
-    var promise = gridCtrl.getData();
-    promise.then(function () {
-        gridCtrl.selectByIndex([1,3], true);
-    }.bind(this));
-};
