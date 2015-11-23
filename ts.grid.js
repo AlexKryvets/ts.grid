@@ -36,6 +36,9 @@
         this.configuration = angular.extend({}, GRID_CONFIGURATION, $scope.configuration);
         $scope.delegate = angular.extend(new GridDelegate, $scope.delegate);
         angular.extend($scope.expose, {
+            refreshSize: function () {
+                $scope.refreshSize();
+            },
             getData: this.getData.bind(this),
             getDataByPage: this.getDataByPage.bind(this),
             getModelParameters: this.getModelParameters.bind(this),
