@@ -42,7 +42,17 @@
             getData: this.getData.bind(this),
             getDataByPage: this.getDataByPage.bind(this),
             getModelParameters: this.getModelParameters.bind(this),
-            selectRowByIndex: this.selectRowByIndex.bind(this)
+            getSelectedRows: function () {
+                return this.selectedRows;
+            }.bind(this),
+            getIndexByRow: function (row) {
+                return this.data.indexOf(row);
+            }.bind(this),
+            selectRowByIndex: this.selectRowByIndex.bind(this),
+            deleteRowByIndex: this.deleteRowByIndex.bind(this),
+            addRowByIndex: function (row, index) {
+                return this.data.splice(index || 0, 0, row);
+            }.bind(this)
         });
 
         $scope.delegate.onCreate(this);
@@ -82,6 +92,18 @@
             angular.forEach(index, select);
         } else {
             select(index);
+        }
+    };
+
+    GridController.prototype.deleteRowByIndex = function (index) {
+        var _delete = function (index) {
+            this.data.splice(index, 1);
+        }.bind(this);
+
+        if (angular.isArray(index)) {
+            angular.forEach(index, _delete);
+        } else {
+            _delete(index);
         }
 
     };
