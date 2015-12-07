@@ -10,16 +10,16 @@
         limit: 50
     };
 
-    function abstractMethod() {}
-
-    function GridDelegate() {
-        this.onCreate = abstractMethod;
-        this.onRowSelect = abstractMethod;
-        this.onRowClick = abstractMethod;
-        this.onRowDoubleClick = abstractMethod;
-        this.onGetDataStart = abstractMethod;
-        this.onGetDataEnd = abstractMethod;
-    }
+    var delegateMethods = ["onCreate", "onRowSelect", "onRowClick", "onRowDoubleClick" , "onGetDataStart", "onGetDataEnd"];
+    var addDefaultMethods = function (delegate) {
+        for (var i = 0, length = delegateMethods.length; i < length; i++) {
+            var methodName = delegateMethods[i];
+            if (typeof delegate[methodName] !== "function") {
+                delegate[methodName] = function abstractMethod() {};
+            }
+        }
+        return delegate;
+    };
 
     function GridController($scope, $parse, dateFilter) {
         this.$scope = $scope;
@@ -34,7 +34,7 @@
         this.name = $scope.name;
         this.model = $scope.model;
         this.configuration = angular.extend({}, GRID_CONFIGURATION, $scope.configuration);
-        $scope.delegate = angular.extend(new GridDelegate, $scope.delegate);
+        $scope.delegate = addDefaultMethods($scope.delegate || {});
         angular.extend($scope.expose, {
             refreshSize: function () {
                 $scope.refreshSize();
